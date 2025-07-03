@@ -22,10 +22,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'rest_framework',                    # ✅ Django REST Framework
-    'rest_framework_simplejwt',         # ✅ JWT moduli
-    'books',                             # ✅ Kitoblar app'i
-    'users',                             # ✅ Ro‘yxatdan o‘tish (register) app'i
+    # ✅ REST va Swagger
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'drf_yasg',
+
+    # 📚 Loyihangdagi app'lar
+    'books',
+    'accounts',  # 🔁 oldingi 'users' o‘rniga
 ]
 
 # ⚙️ Middleware
@@ -95,19 +99,31 @@ USE_TZ = True
 # 📁 Statik fayllar (CSS, JS)
 STATIC_URL = 'static/'
 
-# 📂 Media fayllar (PDF yuklash uchun)
+# 📂 Media fayllar (PDF, rasm, va h.k.)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # 🆔 Default primary key
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ✅ Django REST Framework uchun JWT autentifikatsiyasi
+# ✅ JWT autentifikatsiyasi
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+    )
 }
 
+# ✅ Swagger sozlamalari
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+        }
+    },
+}
 
-
+# 🔐 Custom foydalanuvchi model
+AUTH_USER_MODEL = 'accounts.CustomUser'

@@ -1,26 +1,14 @@
 from rest_framework import generics
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.serializers import ModelSerializer
+from .serializers import RegisterSerializer
 
-# Serializer
-class RegisterSerializer(ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['username', 'password']
-        extra_kwargs = {'password': {'write_only': True}}
+# 🔐 Custom foydalanuvchi modelini olish
+User = get_user_model()
 
-    def create(self, validated_data):
-        user = User.objects.create_user(
-            username=validated_data['username'],
-            password=validated_data['password']
-        )
-        return user
-
-# View
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
+
+
