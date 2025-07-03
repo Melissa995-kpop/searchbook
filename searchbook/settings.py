@@ -44,7 +44,7 @@ MIDDLEWARE = [
 ]
 
 # 🔗 URL konfiguratsiyasi
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = 'searchbook.urls'
 
 # 🧩 Templateler
 TEMPLATES = [
@@ -64,7 +64,7 @@ TEMPLATES = [
 ]
 
 # 🔌 WSGI
-WSGI_APPLICATION = 'config.wsgi.application'
+WSGI_APPLICATION = 'searchbook.wsgi.application'
 
 # 🗃️ SQLite bazasi
 DATABASES = {
