@@ -11,7 +11,15 @@ SECRET_KEY = 'django-insecure-1234567890-very-insecure-key-for-dev-only'
 DEBUG = True
 
 # 🌐 Ruxsat berilgan hostlar
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'searchbook-1-mt61.onrender.com',  # Render domeningizni shu yerga qo‘shing
+]
+
+
+
+
 
 # 📦 Ilovalar
 INSTALLED_APPS = [
