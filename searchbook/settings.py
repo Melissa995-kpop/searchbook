@@ -1,28 +1,26 @@
-from pathlib import Path
 import os
+from pathlib import Path
+from datetime import timedelta
 
-# 📁 Bazaviy yo‘l
+# 📌 Bazaviy yo‘l
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# 🔐 Xavfsizlik kaliti (faqat test uchun!)
+# 📌 Xavfsizlik kaliti (faqat local test uchun)
 SECRET_KEY = 'django-insecure-1234567890-very-insecure-key-for-dev-only'
 
-# 🔧 Ishlab chiqish holati
+# 📌 Ishlab chiqish holati
 DEBUG = True
 
-# 🌐 Ruxsat berilgan hostlar
+# 📌 Ruxsat etilgan hostlar
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'searchbook-1-mt61.onrender.com',  # Render domeningizni shu yerga qo‘shing
+    'searchbook-1-mt61.onrender.com',  # Render.com domeni
 ]
 
-
-
-
-
-# 📦 Ilovalar
+# 📌 Ilovalar
 INSTALLED_APPS = [
+    # Django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -30,31 +28,35 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # ✅ REST va Swagger
+    # 3rd-party apps
+    'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_yasg',
 
-    # 📚 Loyihangdagi app'lar
+    # Custom apps
     'books',
-    'accounts',  # 🔁 oldingi 'users' o‘rniga
+    'accounts',
 ]
 
-# ⚙️ Middleware
+# 📌 Middleware
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # 🔥 CORS middleware eng yuqorida bo‘lishi shart
     'django.middleware.common.CommonMiddleware',
+
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# 🔗 URL konfiguratsiyasi
+# 📌 URL konfiguratsiyasi
 ROOT_URLCONF = 'searchbook.urls'
 
-# 🧩 Templateler
+# 📌 Templateler
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -71,10 +73,10 @@ TEMPLATES = [
     },
 ]
 
-# 🔌 WSGI
+# 📌 WSGI
 WSGI_APPLICATION = 'searchbook.wsgi.application'
 
-# 🗃️ SQLite bazasi
+# 📌 Ma’lumotlar bazasi (SQLite)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -82,46 +84,50 @@ DATABASES = {
     }
 }
 
-# 🔒 Parol tekshiruvlar
+# 📌 Parol validatsiyasi
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# 🌍 Til va vaqt
+# 📌 Til va vaqt
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# 📁 Statik fayllar (CSS, JS)
-STATIC_URL = 'static/'
+# 📌 Statik va media fayllar
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-# 📂 Media fayllar (PDF, rasm, va h.k.)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# 🆔 Default primary key
+# 📌 Default primary key
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ✅ JWT autentifikatsiyasi
+# 📌 Custom foydalanuvchi modeli
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# 📌 DRF + JWT
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
 }
 
-# ✅ Swagger sozlamalari
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+# 📌 Swagger sozlamalari
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,
     'SECURITY_DEFINITIONS': {
@@ -133,5 +139,22 @@ SWAGGER_SETTINGS = {
     },
 }
 
-# 🔐 Custom foydalanuvchi model
-AUTH_USER_MODEL = 'accounts.CustomUser'
+# 📌 CORS sozlamalari
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# 📌 HTTPS uchun sozlama (Render.com uchun kerak)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
