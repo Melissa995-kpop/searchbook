@@ -6,10 +6,12 @@ services:
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
     startCommand: gunicorn searchbook.wsgi:application
+    preDeployCommand: python manage.py migrate
     envVars:
       - key: DEBUG
         value: False
       - key: SECRET_KEY
         value: your-secret-key
+
 
 
