@@ -9,8 +9,8 @@ User = get_user_model()
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
+    serializer_class = RegisterSerializer
 
 
 class LogoutView(APIView):

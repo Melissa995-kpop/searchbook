@@ -19,7 +19,10 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
 
-    objects = CustomUserManager()  # 🔥 MUHIM QATOR
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = 'username'  # 🟢 Username orqali login qilinadi
+    REQUIRED_FIELDS = ['email']  # 🟢 Email majburiy bo‘ladi
 
     def __str__(self):
         return self.username
