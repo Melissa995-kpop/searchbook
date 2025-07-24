@@ -1,24 +1,17 @@
 import os
 from pathlib import Path
 from datetime import timedelta
+from dotenv import load_dotenv
 
-# 📌 Bazaviy yo‘l
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# 📌 Xavfsizlik kaliti (faqat local test uchun)
-SECRET_KEY = 'django-insecure-1234567890-very-insecure-key-for-dev-only'
+# ✅ ENV dan o‘qiladi
+SECRET_KEY = os.getenv('SECRET_KEY', 'fallback-key')
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
-# 📌 Ishlab chiqish holati
-DEBUG = True
-
-# 📌 Ruxsat etilgan hostlar
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    'searchbook-1-mt61.onrender.com',  # Render.com domeni
-]
-
-# 📌 Ilovalar
 INSTALLED_APPS = [
     # Django apps
     'django.contrib.admin',
@@ -39,9 +32,8 @@ INSTALLED_APPS = [
     'accounts',
 ]
 
-# 📌 Middleware
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # 🔥 CORS middleware eng yuqorida bo‘lishi shart
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
@@ -53,10 +45,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# 📌 URL konfiguratsiyasi
 ROOT_URLCONF = 'searchbook.urls'
 
-# 📌 Templateler
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -73,10 +63,8 @@ TEMPLATES = [
     },
 ]
 
-# 📌 WSGI
 WSGI_APPLICATION = 'searchbook.wsgi.application'
 
-# 📌 Ma’lumotlar bazasi (SQLite)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -84,7 +72,6 @@ DATABASES = {
     }
 }
 
-# 📌 Parol validatsiyasi
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -92,26 +79,21 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# 📌 Til va vaqt
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# 📌 Statik va media fayllar
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# 📌 Default primary key
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# 📌 Custom foydalanuvchi modeli
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
-# 📌 DRF + JWT
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -127,7 +109,6 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# 📌 Swagger sozlamalari
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,
     'SECURITY_DEFINITIONS': {
@@ -139,7 +120,6 @@ SWAGGER_SETTINGS = {
     },
 }
 
-# 📌 CORS sozlamalari
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
@@ -154,7 +134,5 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
-# 📌 HTTPS uchun sozlama (Render.com uchun kerak)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
